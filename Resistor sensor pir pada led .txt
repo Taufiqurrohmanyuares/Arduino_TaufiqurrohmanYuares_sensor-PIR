@@ -1,0 +1,39 @@
+// Mendefinisikan konstanta untuk pin PIR dan pin LED
+#define pirpin 2
+#define ledpin 3
+// Deklarasi variabel global untuk menyimpan status PIR dan bacaan dari pin PIR
+int statuspir = LOW;
+int m;
+
+// Fungsi setup() dijalankan sekali saat mikrokontroler pertama kali dihidupkan
+void setup() {
+  // Mengatur pin PIR sebagai input dan pin LED sebagai output
+  pinMode(pirpin, INPUT);
+  pinMode(ledpin, OUTPUT);
+  // Menginisialisasi komunikasi serial pada baud rate 9600 dan menunggu 1 detik
+  Serial.begin(9600);
+  delay(1000);
+}
+
+// Fungsi loop() dijalankan terus-menerus setelah fungsi setup() selesai dieksekusi
+void loop() {
+  // Membaca nilai dari pin PIR dan menyimpannya dalam variabel m
+  m = digitalRead(pirpin);
+  // Memeriksa apakah ada gerakan yang terdeteksi
+  if ( m == HIGH){
+    //delay(2000);
+     // Jika terdeteksi gerakan, nyalakan LED dan kirim pesan melalui serial
+    digitalWrite(ledpin, HIGH);
+
+    Serial.println("gerakan terdeteksi");
+    statuspir = HIGH;
+  }
+  // Jika tidak ada gerakan yang terdeteksi, matikan LED dan kirim pesan melalui serial
+  else{
+    digitalWrite(ledpin, LOW);
+    Serial.println("Tidak ada gerakan");
+    statuspir = LOW;
+  }
+  // Jeda selama 2 detik sebelum melanjutkan loop
+  delay(2000);
+}

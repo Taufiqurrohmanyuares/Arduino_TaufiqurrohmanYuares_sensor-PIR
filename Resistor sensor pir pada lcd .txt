@@ -1,0 +1,57 @@
+// Mengimpor pustaka LiquidCrystal_I2C untuk menggunakan LCD dengan koneksi I2C
+#include <LiquidCrystal_I2C.h>
+
+// Mendeklarasikan objek lcd dengan alamat I2C 0x27, 16 kolom, dan 2 baris
+LiquidCrystal_I2C lcd(0x27,16,2);
+
+#define pirPin 12 //deklarasi pin dari pir yang diberi nama variabel pirPin
+int statusPir = LOW; //deklarasi kondisi dari sensor pir apakah high atau low
+int gerakanPir; //deklarasi variabel untuk pembacaan pir sensor
+int motioncount = 0;// Mendeklarasikan variabel untuk menghitung jumlah gerakan yang terdeteksi, diinisialisasi dengan nilai 0
+
+void setup() {
+  // Mengatur pin pirPin sebagai input
+  pinMode(pirPin, INPUT);
+  // Menginisialisasi LCD dan menyalakan backlight
+  lcd.init();
+  lcd.backlight();
+  lcd.setCursor(2,0);// Menampilkan teks di layar LCD pada posisi tertentu
+  lcd.print("Praktikum");
+  lcd.setCursor(3,1);
+  lcd.print("Hello taufiq");
+  Serial.begin(9600); //memulai komunikasi serial ke serial monitor dengan baud rate 9600
+  delay(4000);// Menunggu 4 detik
+
+
+}
+
+void loop() {
+   gerakanPir = digitalRead(pirPin);
+  if(gerakanPir==HIGH){ //mengecek kondisi pir, jika mendeteksi gerakan maka skrip di bawah if akan dieksekusi secara berulang-ulang saat pir tetap mendeteksi gerakan
+    delay(2000);
+    motioncount++;
+    updateLCD();
+
+    Serial.print("Motion Detect = ");
+    Serial.println(motioncount);
+
+    lcd.backlight();  
+    lcd.setCursor(0, 0);  
+    lcd.print("Motion Detect !");
+    delay(2000) ;
+  }
+  else{  
+    Serial.println("NO motion detect");
+    // lcd.setBacklight(LOW);
+    lcd.clear();
+  }
+  delay(2000);
+}
+
+void updateLCD() {
+  lcd.setCursor(0, 1);
+  lcd.print("Count =  ");
+  lcd.print(motioncount); // menampilkan Hitungan
+
+
+}
